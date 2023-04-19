@@ -46,7 +46,7 @@ Siga os passos abaixo para executar o código e acessar o painel do cliente.
 6. Execute o script `cliente.py` usando o comando:
 **python client.py**
 
-##Mecanismos de comunicação
+## Mecanismos de comunicação
 Este projeto utiliza diferentes mecanismos de comunicação para estabelecer conexões entre os componentes do sistema. A seguir estão os detalhes dessas conexões:
 
 
