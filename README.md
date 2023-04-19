@@ -45,3 +45,10 @@ Siga os passos abaixo para executar o código e acessar o painel do cliente.
 
 6. Execute o script `cliente.py` usando o comando:
 **python client.py**
+
+##Mecanismos de comunicação
+Este projeto utiliza diferentes mecanismos de comunicação para estabelecer conexões entre os componentes do sistema. A seguir estão os detalhes dessas conexões:
+
+Entre o `cliente` e o `client_server`: **gRPC** é utilizado como mecanismo de comunicação para proporcionar uma comunicação rápida e eficiente entre o cliente e o servidor.
+Entre o `administrador` e o `admin_server`: **gRPC** também é utilizado para estabelecer uma comunicação confiável e de alto desempenho entre o painel do administrador e o servidor.
+Entre o `client_server` e o `admin_server`: **MQTT** é utilizado para permitir uma comunicação assíncrona e baseada em eventos entre os servidores, garantindo escalabilidade e eficiência no sistema distribuído.
