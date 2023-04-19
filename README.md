@@ -43,5 +43,5 @@ Siga os passos abaixo para executar o código e acessar o painel do cliente.
 5. No novo terminal, navegue até a pasta do projeto e acesse novamente a pasta Cliente utilizando o comando:
 **cd Cliente**
 
-6. Execute o script cliente.py usando o comando:
+6. Execute o script `cliente.py` usando o comando:
 **python client.py**
