@@ -9,7 +9,7 @@ Certifique-se de ter instalado:
 - Python 3.11
 
 ## Instruções para executar o código
-
+### Administrador
 Siga os passos abaixo para executar o código e acessar o painel do administrador.
 
 1. Abra o terminal e navegue até a pasta do projeto.
