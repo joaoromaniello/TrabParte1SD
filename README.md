@@ -1,7 +1,7 @@
-#Projeto de Sistemas Distribuídos
+# Projeto de Sistemas Distribuídos
 Este projeto é uma implementação de um sistema distribuído que inclui um painel de administrador. Este arquivo README contém instruções passo a passo sobre como executar o código e acessar o painel do administrador.
 
-#Pré-requisitos
+# Pré-requisitos
 Certifique-se de ter instalado:
 
 Python 3.x
