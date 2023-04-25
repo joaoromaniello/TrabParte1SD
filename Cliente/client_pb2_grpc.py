@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import client_pb2 as client__pb2
+import client_pb2 as protos_dot_client__pb2
 
 
 class ClientStub(object):
@@ -10,33 +10,34 @@ class ClientStub(object):
 
     def __init__(self, channel):
         """Constructor.
+
         Args:
             channel: A grpc.Channel.
         """
         self.criarPedido = channel.unary_unary(
                 '/Client/criarPedido',
-                request_serializer=client__pb2.criarPedidoRequest.SerializeToString,
-                response_deserializer=client__pb2.criarPedidoReply.FromString,
+                request_serializer=protos_dot_client__pb2.criarPedidoRequest.SerializeToString,
+                response_deserializer=protos_dot_client__pb2.criarPedidoReply.FromString,
                 )
         self.modificarPedido = channel.unary_unary(
                 '/Client/modificarPedido',
-                request_serializer=client__pb2.modificarPedidoRequest.SerializeToString,
-                response_deserializer=client__pb2.modificarPedidoReply.FromString,
+                request_serializer=protos_dot_client__pb2.modificarPedidoRequest.SerializeToString,
+                response_deserializer=protos_dot_client__pb2.modificarPedidoReply.FromString,
                 )
         self.listarPedido = channel.unary_unary(
                 '/Client/listarPedido',
-                request_serializer=client__pb2.listarPedidoRequest.SerializeToString,
-                response_deserializer=client__pb2.listarPedidoReply.FromString,
-                )
-        self.listarPedidos = channel.unary_unary(
-                '/Client/listarPedidos',
-                request_serializer=client__pb2.listarPedidosRequest.SerializeToString,
-                response_deserializer=client__pb2.listarPedidosReply.FromString,
+                request_serializer=protos_dot_client__pb2.listarPedidoRequest.SerializeToString,
+                response_deserializer=protos_dot_client__pb2.listarPedidoReply.FromString,
                 )
         self.apagarPedido = channel.unary_unary(
                 '/Client/apagarPedido',
-                request_serializer=client__pb2.apagarPedidoRequest.SerializeToString,
-                response_deserializer=client__pb2.apagarPedidoReply.FromString,
+                request_serializer=protos_dot_client__pb2.apagarPedidoRequest.SerializeToString,
+                response_deserializer=protos_dot_client__pb2.apagarPedidoReply.FromString,
+                )
+        self.adicionaPedidoTeste = channel.unary_unary(
+                '/Client/adicionaPedidoTeste',
+                request_serializer=protos_dot_client__pb2.adicionaPedidoTesteRequest.SerializeToString,
+                response_deserializer=protos_dot_client__pb2.adicionaPedidoTesteReply.FromString,
                 )
 
 
@@ -61,13 +62,13 @@ class ClientServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def listarPedidos(self, request, context):
+    def apagarPedido(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def apagarPedido(self, request, context):
+    def adicionaPedidoTeste(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -78,28 +79,28 @@ def add_ClientServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'criarPedido': grpc.unary_unary_rpc_method_handler(
                     servicer.criarPedido,
-                    request_deserializer=client__pb2.criarPedidoRequest.FromString,
-                    response_serializer=client__pb2.criarPedidoReply.SerializeToString,
+                    request_deserializer=protos_dot_client__pb2.criarPedidoRequest.FromString,
+                    response_serializer=protos_dot_client__pb2.criarPedidoReply.SerializeToString,
             ),
             'modificarPedido': grpc.unary_unary_rpc_method_handler(
                     servicer.modificarPedido,
-                    request_deserializer=client__pb2.modificarPedidoRequest.FromString,
-                    response_serializer=client__pb2.modificarPedidoReply.SerializeToString,
+                    request_deserializer=protos_dot_client__pb2.modificarPedidoRequest.FromString,
+                    response_serializer=protos_dot_client__pb2.modificarPedidoReply.SerializeToString,
             ),
             'listarPedido': grpc.unary_unary_rpc_method_handler(
                     servicer.listarPedido,
-                    request_deserializer=client__pb2.listarPedidoRequest.FromString,
-                    response_serializer=client__pb2.listarPedidoReply.SerializeToString,
-            ),
-            'listarPedidos': grpc.unary_unary_rpc_method_handler(
-                    servicer.listarPedidos,
-                    request_deserializer=client__pb2.listarPedidosRequest.FromString,
-                    response_serializer=client__pb2.listarPedidosReply.SerializeToString,
+                    request_deserializer=protos_dot_client__pb2.listarPedidoRequest.FromString,
+                    response_serializer=protos_dot_client__pb2.listarPedidoReply.SerializeToString,
             ),
             'apagarPedido': grpc.unary_unary_rpc_method_handler(
                     servicer.apagarPedido,
-                    request_deserializer=client__pb2.apagarPedidoRequest.FromString,
-                    response_serializer=client__pb2.apagarPedidoReply.SerializeToString,
+                    request_deserializer=protos_dot_client__pb2.apagarPedidoRequest.FromString,
+                    response_serializer=protos_dot_client__pb2.apagarPedidoReply.SerializeToString,
+            ),
+            'adicionaPedidoTeste': grpc.unary_unary_rpc_method_handler(
+                    servicer.adicionaPedidoTeste,
+                    request_deserializer=protos_dot_client__pb2.adicionaPedidoTesteRequest.FromString,
+                    response_serializer=protos_dot_client__pb2.adicionaPedidoTesteReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -123,8 +124,8 @@ class Client(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Client/criarPedido',
-            client__pb2.criarPedidoRequest.SerializeToString,
-            client__pb2.criarPedidoReply.FromString,
+            protos_dot_client__pb2.criarPedidoRequest.SerializeToString,
+            protos_dot_client__pb2.criarPedidoReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -140,8 +141,8 @@ class Client(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Client/modificarPedido',
-            client__pb2.modificarPedidoRequest.SerializeToString,
-            client__pb2.modificarPedidoReply.FromString,
+            protos_dot_client__pb2.modificarPedidoRequest.SerializeToString,
+            protos_dot_client__pb2.modificarPedidoReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -157,25 +158,8 @@ class Client(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Client/listarPedido',
-            client__pb2.listarPedidoRequest.SerializeToString,
-            client__pb2.listarPedidoReply.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def listarPedidos(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Client/listarPedidos',
-            client__pb2.listarPedidosRequest.SerializeToString,
-            client__pb2.listarPedidosReply.FromString,
+            protos_dot_client__pb2.listarPedidoRequest.SerializeToString,
+            protos_dot_client__pb2.listarPedidoReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -191,7 +175,24 @@ class Client(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Client/apagarPedido',
-            client__pb2.apagarPedidoRequest.SerializeToString,
-            client__pb2.apagarPedidoReply.FromString,
+            protos_dot_client__pb2.apagarPedidoRequest.SerializeToString,
+            protos_dot_client__pb2.apagarPedidoReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def adicionaPedidoTeste(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Client/adicionaPedidoTeste',
+            protos_dot_client__pb2.adicionaPedidoTesteRequest.SerializeToString,
+            protos_dot_client__pb2.adicionaPedidoTesteReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

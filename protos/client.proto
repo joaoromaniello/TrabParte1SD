@@ -5,6 +5,7 @@ service Client {
     rpc modificarPedido (modificarPedidoRequest) returns (modificarPedidoReply);
     rpc listarPedido (listarPedidoRequest) returns (listarPedidoReply);
     rpc apagarPedido (apagarPedidoRequest) returns (apagarPedidoReply);
+    rpc adicionaPedidoTeste (adicionaPedidoTesteRequest) returns (adicionaPedidoTesteReply);
 }
 
 message criarPedidoRequest {
@@ -50,4 +51,12 @@ message apagarPedidoRequest {
 
 message apagarPedidoReply {
   string message = 1;
+}
+
+message adicionaPedidoTesteRequest {
+    string clientId = 1;
+}
+
+message adicionaPedidoTesteReply {
+    string message = 1;
 }

@@ -3,31 +3,34 @@ import os
 import client_pb2_grpc
 import client_pb2
 import grpc
-
+from time import sleep
 
 def run():
+    sleep_time = 0.8
     print("===================================")
     porta = input("Digite uma porta para se conectar ao servidor: ")
     os.system('cls' if os.name == 'nt' else 'clear')
     with grpc.insecure_channel(f'localhost:{porta}') as channel:
         stub = client_pb2_grpc.ClientStub(channel)
-        print("\t PAINEL ADMIN\n")
-        print("1. Criar Pedido")
-        print("2. Modificar Pedido")
-        print("3. Listar Pedido")
-        print("4. Listar Pedidos")
-        print("5. Apagar Pedido")
-        print("6. Sair")
+        selection_string = ("\t PAINEL ADMIN\n"
+                            "1. Criar Pedido\n"
+                            "2. Modificar Pedido\n"
+                            "3. Listar Pedido\n"
+                            "4. Listar Pedidos\n"
+                            "5. Apagar Pedido\n"
+                            "6. Sair\n")
 
         while True:
-            rpc_call = input("\nSelecione um serviço: ")
+            os.system('cls')
+            rpc_call = input(selection_string + "\nSelecione um serviço: ")
             if rpc_call == "1":
-                clientId = input("Digite o ID fornecido pelo Administrador:")
+                clientId = input("Digite o ID :")
                 request = client_pb2.criarPedidoRequest(clientId=clientId)
                 reply = stub.criarPedido(request)
                 print(reply.message)
+                sleep(sleep_time)
             elif rpc_call == "2":
-                clientId = input("Digite o ID fornecido pelo Administrador:")
+                clientId = input("Digite o ID :")
                 ordemId = input("Digite a ordem do seu pedido:")
                 produto = input("Digite o nome do produto:")
                 quantidade = int(input("Digite a quantidade do produto:"))
@@ -35,24 +38,30 @@ def run():
                                                             quantidade=quantidade)
                 reply = stub.modificarPedido(request)
                 print(reply.message)
+                sleep(sleep_time)
             elif rpc_call == "3":
-                clientId = input("Digite o ID fornecido pelo Administrador:")
+                clientId = input("Digite o ID :")
                 ordemId = input("Digite a ordem do seu pedido:")
                 request = client_pb2.listarPedidoRequest(clientId=clientId, ordemId=ordemId)
                 reply = stub.listarPedido(request)
                 print(reply.message)
+                sleep(sleep_time)
             elif rpc_call == "4":
-                clientId = input("Digite o ID fornecido pelo Administrador:")
+                clientId = input("Digite o ID :")
                 request = client_pb2.listarPedidosRequest(clientId=clientId)
-                reply = stub.listarPedidos(request)
+                reply = stub.listarPedido(request)
                 print(reply.message)
+                sleep(sleep_time)
             elif rpc_call == "5":
-                clientId = input("Digite o ID fornecido pelo Administrador:")
+                clientId = input("Digite o ID :")
                 ordemId = input("Digite a ordem do seu pedido:")
                 request = client_pb2.apagarPedidoRequest(clientId=clientId, ordemId=ordemId)
                 reply = stub.apagarPedido(request)
                 print(reply.message)
+                sleep(sleep_time)
             elif rpc_call == "6":
+                print("Portal finalizado..")
+                sleep(sleep_time)
                 break
             else:
                 print("Serviço inválido!")
