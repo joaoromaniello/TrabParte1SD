@@ -12,7 +12,7 @@ def run():
     os.system('cls' if os.name == 'nt' else 'clear')
     with grpc.insecure_channel(f'localhost:{porta}') as channel:
         stub = client_pb2_grpc.ClientStub(channel)
-        selection_string = ("\t PAINEL ADMIN\n"
+        selection_string = ("\t PAINEL CLIENTE\n"
                             "1. Criar Pedido\n"
                             "2. Modificar Pedido\n"
                             "3. Listar Pedido\n"
@@ -24,7 +24,7 @@ def run():
             os.system('cls')
             rpc_call = input(selection_string + "\nSelecione um serviço: ")
             if rpc_call == "1":
-                clientId = input("Digite o ID :")
+                clientId = input("Digite o ID (Cliente):")
                 request = client_pb2.criarPedidoRequest(clientId=clientId)
                 reply = stub.criarPedido(request)
                 print(reply.message)

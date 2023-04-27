@@ -15,7 +15,6 @@ dicionarioClient = dict()
 dicionarioProduct = dict()
 dicionarioPedido = dict()
 
-
 class ClientServicer(client_pb2_grpc.ClientServicer):
     def criarPedido(self, request_iterator, context):
         global dicionarioClient, dicionarioPedido
@@ -164,17 +163,16 @@ class ClientServicer(client_pb2_grpc.ClientServicer):
 
 #Cliente se inscreve nos serviços disponiveis
 
-    def subscribeToServices(self):
-        client.loop_start()
-        client.subscribe("InserirProduto")
-        client.subscribe("ModificarProduto")
-        client.subscribe("ApagarProduto")
-        client.subscribe("InserirCliente")
-        client.subscribe("ModificarCliente")
-        client.subscribe("ApagarCliente")
-        client.on_message = self.on_message
 
-    subscribeToServices()
+    client.loop_start()
+    client.subscribe("InserirProduto")
+    client.subscribe("ModificarProduto")
+    client.subscribe("ApagarProduto")
+    client.subscribe("InserirCliente")
+    client.subscribe("ModificarCliente")
+    client.subscribe("ApagarCliente")
+    client.on_message = on_message
+
 
 def serve():
     porta = input("Digite uma porta para abrir o servidor: ")
