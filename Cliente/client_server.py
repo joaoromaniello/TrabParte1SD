@@ -163,15 +163,18 @@ class ClientServicer(client_pb2_grpc.ClientServicer):
 
 
 #Cliente se inscreve nos serviços disponiveis
-    client.loop_start()
-    client.subscribe("InserirCliente")
-    client.subscribe("ModificarCliente")
-    client.subscribe("ApagarCliente")
-    client.subscribe("InserirProduto")
-    client.subscribe("ModificarProduto")
-    client.subscribe("ApagarProduto")
-    client.on_message = on_message
 
+    def subscribeToServices(self):
+        client.loop_start()
+        client.subscribe("InserirProduto")
+        client.subscribe("ModificarProduto")
+        client.subscribe("ApagarProduto")
+        client.subscribe("InserirCliente")
+        client.subscribe("ModificarCliente")
+        client.subscribe("ApagarCliente")
+        client.on_message = self.on_message
+
+    subscribeToServices()
 
 def serve():
     porta = input("Digite uma porta para abrir o servidor: ")
