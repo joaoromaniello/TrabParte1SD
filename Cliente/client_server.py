@@ -22,7 +22,7 @@ class ClientServicer(client_pb2_grpc.ClientServicer):
         print("Criar Pedido")
         reply = client_pb2.criarPedidoReply()
         if request_iterator.clientId in dicionarioClient:
-            ordemId = random.randint(0, 100)
+            ordemId = random.randint(1, 100)
             while ordemId in dicionarioPedido:
                 ordemId = random.randint(0, 100)
             dadosPedido = {'clientId': str(request_iterator.clientId), 'produto': '', 'quantidade': '', 'total': '0'}
@@ -161,6 +161,8 @@ class ClientServicer(client_pb2_grpc.ClientServicer):
         global dicionarioProduct
         dicionarioProduct = ast.literal_eval(msg[1])
 
+
+#Cliente se inscreve nos serviços disponiveis
     client.loop_start()
     client.subscribe("InserirCliente")
     client.subscribe("ModificarCliente")

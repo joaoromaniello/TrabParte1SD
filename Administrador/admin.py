@@ -113,7 +113,7 @@ def run():
                     print("========================")
                     print("Executando teste unitário de adicionar cliente...")
 
-                    clientId = '-999'
+                    clientId = 'Teste'
                     nome = "Cliente"
                     sobrenome = "Teste"
                     dadosCliente = {"nome": nome, "sobrenome": sobrenome}
