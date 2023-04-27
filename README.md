@@ -10,13 +10,11 @@ Certifique-se de ter instalado:
 
 ## Instalando dependências
 
-Para instalar todas as dependências necessárias para executar este projeto, abra o terminal, navegue até a pasta do projeto e ative o ambiente virtual.
-
-Em seguida, execute o seguinte comando:
+Para instalar todas as dependências necessárias para executar este projeto abra o terminal e em seguida, execute o seguinte comando:
 
 **pip install -r requirements.txt**
 
-Isso instalará todos os pacotes listados no arquivo `requirements.txt` no seu ambiente virtual.
+Isso instalará todos os pacotes listados no arquivo `requirements.txt` em sua maquina
 
 ## Instruções para executar o código
 ### Administrador
