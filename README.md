@@ -1,4 +1,8 @@
+
+
 # Projeto de Sistemas Distribuídos
+## Link para video
+https://www.youtube.com/watch?v=4o84ExO9p5g
 
 Este projeto é uma implementação de um sistema distribuído que inclui um painel de administrador e um painel de cliente para listagem de produtos. Este arquivo README contém instruções passo a passo sobre como executar o código e acessar os paineis.
 
