@@ -68,9 +68,7 @@ class ClientServicer(client_pb2_grpc.ClientServicer):
                                             "preco": produto['preco']}
                             dicionarioProduct[produtoId] = json.dumps(dadosProduto)
                             dadosPedido = {'clientId': str(request_iterator.clientId),
-                                           'produto': request_iterator.produto,
-                                           'quantidade': request_iterator.quantidade,
-                                           'total': str(produto['preco'] * request_iterator.quantidade)}
+                                           'produto': request_iterator.produto,'quantidade': request_iterator.quantidade,'total': str(produto['preco'] * request_iterator.quantidade)}
                             dicionarioPedido[request_iterator.ordemId] = json.dumps(dadosPedido)
                             client.publish("ModificarPedido", str(dicionarioProduct))
                             print("Modificação realizada: " + str(dicionarioPedido))

@@ -114,7 +114,7 @@ def run():
                     print("Executando teste unitário de adicionar cliente...")
 
                     clientId = 'Teste'
-                    nome = "Cliente"
+                    nome = "Teste"
                     sobrenome = "Teste"
                     dadosCliente = {"nome": nome, "sobrenome": sobrenome}
 
@@ -129,10 +129,10 @@ def run():
                     sleep(sleep_time)
                 else:
                     print("Serviço inválido!")
-    except:
+    except Exception as e:
         os.system('cls')
         print(
-            "======== ERRO! ========\n Possivelmente a porta informada não está configurada como servidor...\nTente novamente  com outra porta...")
+            "======== ERRO! ========\n Possivelmente a porta informada não está configurada como servidor...\nTente novamente  com outra porta...\nErro:"+str(e))
 
 
 if __name__ == "__main__":

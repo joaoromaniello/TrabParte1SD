@@ -1,84 +1,138 @@
 import ast
 from concurrent import futures
 import grpc
+from pysyncobj import SyncObj
+
 import admin_pb2
 import admin_pb2_grpc
 from paho.mqtt import client as mqtt
+import lmdb
 import json
 
 mqttBroker = "mqtt.eclipseprojects.io"
 client = mqtt.Client("Admin Server")
 client.connect(mqttBroker)
 
-dicionarioClient = dict()
+env1 = lmdb.open('/Dados', map_size=1000000)
+env2 = lmdb.open('/Dados', map_size=1000000)
+
 dicionarioProduct = dict()
-clientArray = []
 productArray = []
 
 
-class AdminServicer(admin_pb2_grpc.AdminServicer):
+class AdminServicer(admin_pb2_grpc.AdminServicer, SyncObj):
+
+    def get_partition(self, clientId):
+        # Converta o clientId para int (se necessário) e aplique o operador modulo
+        partition = int(clientId) % 2
+
+        # Retorne a partição correspondente
+        if partition == 0:
+            return 1, env1  # Insira em env1 se o mod for 0
+        else:
+            return 2, env2  # Insira em env2 se o mod for 1
+
+    ####FEITO
     def inserirCliente(self, request_iterator, context):
-        global dicionarioClient
         print("Inserir Cliente")
         reply = admin_pb2.inserirClienteReply()
-        if request_iterator.clientId in dicionarioClient:
+
+        # Determinando a partição correta
+        partition_number, partition = self.get_partition(request_iterator.clientId)
+
+        # Recuperando dados do banco de dados
+        with partition.begin() as txn:
+            dadosCliente_db = txn.get(request_iterator.clientId.encode())
+
+        if dadosCliente_db is not None:
             reply.message = 'Cliente já existe!'
         else:
-            clientArray.append([request_iterator.clientId, request_iterator.dadosCliente])
-            dicionarioClient = dict(clientArray)
-            client.publish("InserirCliente", str(dicionarioClient) + '/' + str(dicionarioProduct))
-            print("Inserção realizada: " + str(dicionarioClient))
-            reply.message = 'Cliente inserido!'
+            # Inserindo dados no banco de dados
+            with partition.begin(write=True) as txn:
+                txn.put(request_iterator.clientId.encode(), request_iterator.dadosCliente.encode())
+
+            client.publish("InserirCliente", str(request_iterator.clientId) + '/' + str(request_iterator.dadosCliente))
+            print(
+                f"Inserção realizada na partição " + str(
+                    partition_number) + f": {request_iterator.clientId}: {request_iterator.dadosCliente}")
+            reply.message = f'Cliente inserido na partição  {partition_number}!'
 
         return reply
 
+    ####FEITO
     def modificarCliente(self, request_iterator, context):
-        global dicionarioClient
         print("Modificar Cliente")
         reply = admin_pb2.modificarClienteReply()
 
-        if request_iterator.clientId not in dicionarioClient:
+        # Determinando a partição correta
+        partition_number, partition = self.get_partition(request_iterator.clientId)
+
+        # Recuperando dados do banco de dados
+        with partition.begin() as txn:
+            dadosCliente_db = txn.get(request_iterator.clientId.encode())
+
+        if dadosCliente_db is None:
             reply.message = 'Cliente não existe!'
         else:
             novosDados = json.loads(request_iterator.dadosCliente)
             dadosCliente = {"nome": novosDados['nome'], "sobrenome": novosDados['sobrenome']}
-            dicionarioClient[request_iterator.clientId] = json.dumps(dadosCliente)
-            client.publish("ModificarCliente", str(dicionarioClient) + '/' + str(dicionarioProduct))
-            print("Modificação realizada: " + str(dicionarioClient))
-            reply.message = 'Cliente modificado!'
+            with partition.begin(write=True) as txn:
+                txn.put(request_iterator.clientId.encode(), json.dumps(dadosCliente).encode())
+
+            client.publish("ModificarCliente",
+                           str(request_iterator.clientId) + '/' + str(request_iterator.dadosCliente))
+            print(
+                f"Modificação realizada na partição {partition_number}: {request_iterator.clientId}: {request_iterator.dadosCliente}")
+            reply.message = f'Cliente modificado na partição {partition_number}!'
 
         return reply
 
+    ####FEITO
     def recuperarCliente(self, request_iterator, context):
-        global dicionarioClient
         print("Recuperar Cliente")
-
         reply = admin_pb2.recuperarClienteReply()
 
-        if request_iterator.clientId not in dicionarioClient:
+        # Determinando a partição correta
+        partition_number, partition = self.get_partition(request_iterator.clientId)
+
+        # Recuperando dados do banco de dados
+        with partition.begin() as txn:
+            dadosCliente_db = txn.get(request_iterator.clientId.encode())
+
+        if dadosCliente_db is None:
             reply.message = 'Cliente não existe!'
         else:
-            dadosCliente = json.loads(dicionarioClient[request_iterator.clientId])
-            reply.message = f"Cliente recuperado:\nNome - {dadosCliente['nome']}\nSobrenome - {dadosCliente['sobrenome']}"
+            dadosCliente = json.loads(dadosCliente_db)
+            reply.message = f"Cliente recuperado na partição {partition_number}:\nNome - {dadosCliente['nome']}\nSobrenome - {dadosCliente['sobrenome']}"
 
         return reply
 
+    ####FEITO
     def apagarCliente(self, request_iterator, context):
-        global dicionarioClient
         print("Apagar Cliente")
-
         reply = admin_pb2.apagarClienteReply()
 
-        if request_iterator.clientId not in dicionarioClient:
+        # Determinando a partição correta
+        partition_number, partition = self.get_partition(request_iterator.clientId)
+
+        # Verificando se o cliente existe
+        with partition.begin() as txn:
+            dadosCliente_db = txn.get(request_iterator.clientId.encode())
+
+        if dadosCliente_db is None:
             reply.message = 'Cliente não existe!'
         else:
-            dicionarioClient.pop(request_iterator.clientId)
-            client.publish("ApagarCliente", str(dicionarioClient) + '/' + str(dicionarioProduct))
-            print("Cliente apagado realizada: " + str(dicionarioClient))
-            reply.message = 'Cliente apagado!'
+            # Apagando o cliente do banco de dados
+            with partition.begin(write=True) as txn:
+                txn.delete(request_iterator.clientId.encode())
+
+            client.publish("ApagarCliente", str(request_iterator.clientId))
+            print(f"Cliente apagado na partição {partition_number}: {request_iterator.clientId}")
+            reply.message = f'Cliente apagado na partição {partition_number}!'
 
         return reply
 
+    ####FEITO
     def inserirProduto(self, request_iterator, context):
         global dicionarioProduct
         print("Inserir Produto")
@@ -94,6 +148,7 @@ class AdminServicer(admin_pb2_grpc.AdminServicer):
 
         return reply
 
+    ####FEITO
     def modificarProduto(self, request_iterator, context):
         global dicionarioProduct
         print("Modificar Produto")
@@ -112,6 +167,7 @@ class AdminServicer(admin_pb2_grpc.AdminServicer):
 
         return reply
 
+    ####FEITO
     def recuperarProduto(self, request_iterator, context):
         global dicionarioProduct
         print("Recuperar Produto")
@@ -127,6 +183,7 @@ class AdminServicer(admin_pb2_grpc.AdminServicer):
 
         return reply
 
+    ####FEITO
     def apagarProduto(self, request_iterator, context):
         global dicionarioProduct
         print("Apagar Produto")
